@@ -127,8 +127,6 @@ function EraInput({ style, onClick }: { style: Era["uiStyle"]; onClick?: () => v
   }
 }
 
-// モーダルコンポーネント
-// モーダルコンポーネント
 function EraModal({
   era,
   elementType,
@@ -266,6 +264,10 @@ export default function Page() {
           </p>
         </motion.div>
       </AnimatePresence>
+
+      <div className="absolute bottom-32 mb-4 text-center w-full z-20">
+        <p className="text-white/60 zen-maru-gothic">UIをクリックして説明を見る</p>
+      </div>
 
       {/* 下部の年代ボタン */}
       <div className="absolute bottom-12 flex gap-8 z-20">

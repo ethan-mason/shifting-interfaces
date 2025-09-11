@@ -10,26 +10,15 @@ type Era = {
     bg: string;
     accent: string;
   };
-  uiStyle: "retro" | "glossy" | "flat";
+  uiStyle: "glossy" | "flat" | "modern";
 };
 
 const eras: Era[] = [
   {
-    year: "1980s",
-    title: "GUIの登場",
-    description:
-      "それまで文字だけで操作していたパソコンに、アイコンやウィンドウを使った画面表示が導入された。マウスで選んでクリックする操作が加わり、より多くの人が使いやすい環境が広がり始めた。",
-    theme: {
-      bg: "from-emerald-400 to-teal-500",
-      accent: "border-emerald-200",
-    },
-    uiStyle: "retro",
-  },
-  {
     year: "2000s",
     title: "スキューモーフィズム",
     description:
-      "ボタンやアイコンに光や影をつけて立体的に見せるデザインが広く使われた。画面上の部品を現実の道具に近づけることで、誰でも直感的に操作できるように工夫されていた。Windows XPやmacOSのデザインが代表的。",
+      "ボタンやアイコンに光沢や影をつけ、現実の質感を画面上に再現するデザインが広がった。Windows XPやmacOS Aquaの見た目が代表的で、インターネットやアプリにリアルさが求められた時代。",
     theme: {
       bg: "from-sky-300 to-indigo-400",
       accent: "border-sky-100",
@@ -37,80 +26,77 @@ const eras: Era[] = [
     uiStyle: "glossy",
   },
   {
-    year: "2020s",
-    title: "フラットデザインとダークモード",
+    year: "2010s",
+    title: "フラットデザイン",
     description:
-      "色や装飾をできるだけ少なくし、シンプルで読みやすい画面デザインが主流になった。また、多くのアプリやOSにダークモードが追加され、昼と夜など利用する環境に合わせて表示を切り替えられるようになった。",
+      "影や装飾を取り除き、シンプルでフラットなデザインが主流になった。iOS 7やGoogleのMaterial Designが代表例で、文字や色の情報量を整理し、見やすさや軽快さが重視された。",
+    theme: {
+      bg: "from-green-300 to-emerald-500",
+      accent: "border-green-100",
+    },
+    uiStyle: "flat",
+  },
+  {
+    year: "2020s",
+    title: "シンプルとダークモード",
+    description:
+      "フラットデザインをベースに、余白や配色を工夫した落ち着いた画面が増えた。さらに多くのOSやアプリにダークモードが導入され、昼夜や環境に合わせて画面を切り替えることが一般的になった。",
     theme: {
       bg: "from-indigo-400 to-purple-600",
       accent: "border-pink-300",
     },
-    uiStyle: "flat",
+    uiStyle: "modern",
   },
 ];
 
-function EraButton({ style, era }: { style: Era["uiStyle"]; era?: Era }) {
+function EraButton({ style }: { style: Era["uiStyle"] }) {
   switch (style) {
-    case "retro":
-      return (
-        <button className="px-4 py-2 border-2 border-gray-100 bg-emerald-600 text-xs font-mono shadow-inner text-white">
-          OK
-        </button>
-      );
     case "glossy":
       return (
-        <button className="px-6 py-2 rounded-full bg-gradient-to-b from-white to-gray-200 text-gray-800 shadow-lg border">
-          Click Me
+        <button
+          className="css-button-shadow-border-sliding--sky cursor-pointer tiny5 px-4 py-2">
+          Search
         </button>
       );
-    case "flat": {
-      const is2020s = era?.year === "2020s";
+    case "flat":
       return (
-        <button
-          className={
-            is2020s
-              ? "px-4 py-2 rounded-lg bg-gradient-to-br from-indigo-400 to-purple-500 hover:from-indigo-500 hover:to-purple-600 text-white shadow-md border border-indigo-300/30 focus:outline-none focus:ring-2 focus:ring-pink-300/40"
-              : "px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-400 text-white"
-          }
-        >
+        <button className="border border-gray-300 rounded-md px-4 py-2 text-green-600 text-sm bg-gradient-to-b from-white to-gray-200">
           Submit
         </button>
       );
-    }
+    case "modern":
+      return (
+        <button className="px-4 py-2 bg-purple-400 text-white font-semibold rounded-full">
+          Button
+        </button>
+      );
   }
 }
 
-function EraInput({ style, era }: { style: Era["uiStyle"]; era?: Era }) {
+// 年代別擬似入力欄（背景用）
+function EraInput({ style }: { style: Era["uiStyle"] }) {
   switch (style) {
-    case "retro":
+    case "glossy": // 2000s: デフォルト
       return (
-        <input
-          className="px-2 py-1 border-2 border-gray-100 bg-emerald-700 text-xs font-mono text-white placeholder-gray-200"
-          placeholder="C:\\>_"
-        />
+        <button className="bg-gradient-to-b from-white to-gray-200 px-4 py-2 border border-gray-300 text-gray-400 w-48 rounded-sm text-sm flex w-full whitespace-nowrap tiny5 ">
+          Search Videos...
+        </button>
       );
-    case "glossy":
+    case "flat": // 2010s: ケバめ（背景白→グレーのグラデ）
       return (
-        <input
-          className="px-3 py-2 rounded-full shadow-inner bg-white border text-gray-700"
-          placeholder="Search..."
-        />
+        <button className="px-4 py-2 w-48 text-sm text-gray-900 border-b-2 border-gray-400 bg-white rounded-none shadow-sm flex items-center whitespace-nowrap overflow-hidden text-ellipsis">
+          Type here...
+        </button>
       );
-    case "flat": {
-      const is2020s = era?.year === "2020s";
+    case "modern": // 2020s: シンプル
       return (
-        <input
-          className={
-            is2020s
-              ? "px-3 py-2 rounded-lg bg-purple-100 border border-purple-300 text-gray-800 placeholder-gray-500"
-              : "px-3 py-2 rounded-lg bg-gray-100 border border-gray-300 text-gray-800"
-          }
-          placeholder="Type here..."
-        />
+        <button className="px-4 py-2 rounded-md border border-white text-sm whitespace-nowrap w-32 flex">
+          Enter text...
+        </button>
       );
-    }
   }
 }
+
 
 export default function Page() {
   const [index, setIndex] = useState(0);
@@ -122,11 +108,11 @@ export default function Page() {
 
   useEffect(() => {
     const screenHeight = window.innerHeight;
-    const items = [...Array(100)].map(() => ({
+    const items = [...Array(70)].map(() => ({
       isButton: Math.random() > 0.5,
       offsetY: Math.random() * screenHeight,
-      scale: 0.8 + Math.random() * 0.4,
-      opacity: 0.3,
+      scale: 0.9 + Math.random() * 0.5,
+      opacity: 0.45,
     }));
     setBackgroundItems(items);
   }, [index]);
@@ -135,13 +121,13 @@ export default function Page() {
     <main
       className={`relative min-h-screen w-full overflow-hidden text-white flex flex-col items-center justify-center transition-colors duration-600 bg-gradient-to-br ${currentEra.theme.bg}`}
     >
-      {/* 背景UI（ランダム生成 → useEffectで制御） */}
+      {/* 背景UI */}
       <motion.div
         key={currentEra.year + "-bg-layer1"}
         initial={{ x: "100%" }}
         animate={{ x: "-200%" }}
-        transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
-        className="absolute inset-0 flex gap-40"
+        transition={{ repeat: Infinity, duration: 35, ease: "linear" }}
+        className="absolute inset-0 flex gap-32"
       >
         {backgroundItems.map((item, i) => (
           <div
@@ -152,14 +138,15 @@ export default function Page() {
             }}
           >
             {item.isButton ? (
-              <EraButton style={currentEra.uiStyle} era={currentEra} />
+              <EraButton style={currentEra.uiStyle} />
             ) : (
-              <EraInput style={currentEra.uiStyle} era={currentEra} />
+              <EraInput style={currentEra.uiStyle} />
             )}
           </div>
         ))}
       </motion.div>
 
+      {/* 中央コンテンツ */}
       <AnimatePresence mode="wait">
         <motion.div
           key={currentEra.year}
@@ -171,10 +158,13 @@ export default function Page() {
         >
           <h2 className="text-3xl font-semibold">{currentEra.year}</h2>
           <p className="text-2xl mt-1 zen-maru-gothic">{currentEra.title}</p>
-          <p className="text-gray-100 mt-4 zen-maru-gothic">{currentEra.description}</p>
+          <p className="text-gray-100 mt-4 zen-maru-gothic">
+            {currentEra.description}
+          </p>
         </motion.div>
       </AnimatePresence>
 
+      {/* 下部の年代ボタン */}
       <div className="absolute bottom-12 flex gap-8 z-20">
         {eras.map((era, i) => (
           <motion.button

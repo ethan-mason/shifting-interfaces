@@ -122,11 +122,11 @@ export default function Page() {
 
   useEffect(() => {
     const screenHeight = window.innerHeight;
-    const items = [...Array(50)].map(() => ({
+    const items = [...Array(100)].map(() => ({
       isButton: Math.random() > 0.5,
       offsetY: Math.random() * screenHeight,
-      scale: 0.5 + Math.random(),
-      opacity: 0.3 + Math.random() * 0.7,
+      scale: 0.8 + Math.random() * 0.4,
+      opacity: 0.3,
     }));
     setBackgroundItems(items);
   }, [index]);
@@ -141,7 +141,7 @@ export default function Page() {
         initial={{ x: "100%" }}
         animate={{ x: "-200%" }}
         transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
-        className="absolute inset-0 flex gap-40 opacity-10"
+        className="absolute inset-0 flex gap-40"
       >
         {backgroundItems.map((item, i) => (
           <div

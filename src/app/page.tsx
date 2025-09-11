@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 type Era = {
   year: string;
@@ -127,8 +128,26 @@ function EraInput({ style, onClick }: { style: Era["uiStyle"]; onClick?: () => v
 }
 
 // モーダルコンポーネント
-function EraModal({ era, elementType, onClose }: { era: Era; elementType: EraElementType; onClose: () => void }) {
+// モーダルコンポーネント
+function EraModal({
+  era,
+  elementType,
+  onClose,
+}: {
+  era: Era;
+  elementType: EraElementType;
+  onClose: () => void;
+}) {
   const historyText = elementType === "button" ? era.buttonHistory : era.inputHistory;
+
+  // 条件付きで画像パスを決定
+  let imageSrc: string | null = null;
+  if (era.year === "2000s" && elementType === "button") {
+    imageSrc = "/examples/2000_button.png";
+  } else if (era.year === "2010s" && elementType === "input") {
+    imageSrc = "/examples/2010_input.png";
+  }
+
   return (
     <AnimatePresence>
       {era && (
@@ -148,6 +167,18 @@ function EraModal({ era, elementType, onClose }: { era: Era; elementType: EraEle
             <h2 className="text-2xl font-bold mb-2">{era.year}</h2>
             <h3 className="text-lg font-semibold mb-4">{era.title}</h3>
             <p className="mb-6 leading-relaxed">{historyText}</p>
+
+            {/* 条件付き画像表示 */}
+            {imageSrc && (
+              <div className="mb-6">
+                <Image
+                  src={imageSrc}
+                  alt={`${era.year} ${elementType}`} width={100} height={100}
+                  className="w-2/3 mx-auto"
+                />
+              </div>
+            )}
+
             <button
               onClick={onClose}
               className="px-4 py-2 bg-indigo-500 duration-200 text-white rounded-lg hover:bg-indigo-600"
@@ -160,6 +191,7 @@ function EraModal({ era, elementType, onClose }: { era: Era; elementType: EraEle
     </AnimatePresence>
   );
 }
+
 
 export default function Page() {
   const [index, setIndex] = useState(0);

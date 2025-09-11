@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 type Era = {
@@ -16,9 +16,9 @@ type Era = {
 const eras: Era[] = [
   {
     year: "1980s",
-    title: "初期GUI",
+    title: "はじめてのウィンドウ",
     description:
-      "MacintoshやWindows 1.0が登場し、アイコンとウィンドウの時代が始まった。",
+      "それまで文字だけだったパソコンに、アイコンやウィンドウが登場。『見る』『クリックする』という操作が初めて広まり、誰でも触れる時代が始まった。",
     theme: {
       bg: "from-emerald-400 to-teal-500",
       accent: "border-emerald-200",
@@ -27,9 +27,9 @@ const eras: Era[] = [
   },
   {
     year: "2000s",
-    title: "Web 2.0",
+    title: "ツヤと立体感の黄金期",
     description:
-      "スキューモーフィズムやリッチUIが流行し、インターネットが華やかなデザインで彩られた。",
+      "ボタンは光を反射するようにキラキラ、影もたっぷり。インターネットやアプリは“リアルっぽさ”を追いかけていた。",
     theme: {
       bg: "from-sky-300 to-indigo-400",
       accent: "border-sky-100",
@@ -38,9 +38,9 @@ const eras: Era[] = [
   },
   {
     year: "2020s",
-    title: "フラット & ダークモード",
+    title: "シンプルとダークモード",
     description:
-      "シンプルでミニマルなデザイン。アクセシビリティ重視のダークモードも一般化した。",
+      "色や装飾をそぎ落とし、読みやすさ重視のフラットデザインへ。さらにダークモードで、夜でも目にやさしい使い方が広まった。",
     theme: {
       bg: "from-indigo-400 to-purple-600",
       accent: "border-pink-300",
@@ -116,13 +116,26 @@ export default function Page() {
   const [index, setIndex] = useState(0);
   const currentEra = eras[index];
 
-  const screenHeight = typeof window !== "undefined" ? window.innerHeight : 800;
+  const [backgroundItems, setBackgroundItems] = useState<
+    { isButton: boolean; offsetY: number; scale: number; opacity: number }[]
+  >([]);
+
+  useEffect(() => {
+    const screenHeight = window.innerHeight;
+    const items = [...Array(50)].map(() => ({
+      isButton: Math.random() > 0.5,
+      offsetY: Math.random() * screenHeight,
+      scale: 0.5 + Math.random(),
+      opacity: 0.3 + Math.random() * 0.7,
+    }));
+    setBackgroundItems(items);
+  }, [index]);
 
   return (
     <main
-      className={`relative h-screen w-full overflow-hidden text-white flex flex-col items-center justify-center transition-colors duration-700 bg-gradient-to-br ${currentEra.theme.bg}`}
+      className={`relative min-h-screen w-full overflow-hidden text-white flex flex-col items-center justify-center transition-colors duration-600 bg-gradient-to-br ${currentEra.theme.bg}`}
     >
-      {/* 背景UI（横方向に無限スクロール、中央3/4範囲でランダム配置） */}
+      {/* 背景UI（ランダム生成 → useEffectで制御） */}
       <motion.div
         key={currentEra.year + "-bg-layer1"}
         initial={{ x: "100%" }}
@@ -130,28 +143,22 @@ export default function Page() {
         transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
         className="absolute inset-0 flex gap-40 opacity-10"
       >
-  {[...Array(50)].map((_, i) => {
-    const isButton = Math.random() > 0.5;
-    const offsetY = Math.random() * screenHeight;
-    const scale = 0.5 + Math.random(); // 0.5x ~ 1.5x
-    const opacity = 0.3 + Math.random() * 0.7;
-    return (
-      <div
-        key={i}
-        style={{
-          transform: `translateY(${offsetY}px) scale(${scale})`,
-          opacity,
-        }}
-      >
-        {isButton ? (
-          <EraButton style={currentEra.uiStyle} era={currentEra} />
-        ) : (
-          <EraInput style={currentEra.uiStyle} era={currentEra} />
-        )}
-      </div>
-    );
-  })}
-</motion.div>
+        {backgroundItems.map((item, i) => (
+          <div
+            key={i}
+            style={{
+              transform: `translateY(${item.offsetY}px) scale(${item.scale})`,
+              opacity: item.opacity,
+            }}
+          >
+            {item.isButton ? (
+              <EraButton style={currentEra.uiStyle} era={currentEra} />
+            ) : (
+              <EraInput style={currentEra.uiStyle} era={currentEra} />
+            )}
+          </div>
+        ))}
+      </motion.div>
 
       <AnimatePresence mode="wait">
         <motion.div
@@ -159,12 +166,12 @@ export default function Page() {
           initial={{ opacity: 0, y: 80, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -80, scale: 0.95 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.6 }}
           className="z-10 flex flex-col items-center text-center max-w-xl px-6"
         >
           <h2 className="text-3xl font-semibold">{currentEra.year}</h2>
-          <p className="text-xl font-medium mt-1">{currentEra.title}</p>
-          <p className="text-gray-100 text-sm mt-4">{currentEra.description}</p>
+          <p className="text-2xl mt-1 zen-maru-gothic">{currentEra.title}</p>
+          <p className="text-gray-100 mt-4 zen-maru-gothic">{currentEra.description}</p>
         </motion.div>
       </AnimatePresence>
 
@@ -174,11 +181,11 @@ export default function Page() {
             key={i}
             onClick={() => setIndex(i)}
             whileHover={{ scale: 1.08 }}
-            className={`w-20 h-20 rounded-full flex items-center justify-center shadow-lg border-4 transition-colors duration-500 ${
+            className={`w-20 h-20 rounded-full flex items-center justify-center shadow-lg border-4 transition-colors duration-600 ${
               index === i ? era.theme.accent : "border-gray-400"
             } bg-gray-800/50 backdrop-blur`}
           >
-            <span className="text-sm font-bold">{era.year}</span>
+            <span className="text-sm font-semibold">{era.year}</span>
           </motion.button>
         ))}
       </div>

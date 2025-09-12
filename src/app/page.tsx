@@ -14,15 +14,17 @@ type Era = {
   uiStyle: "glossy" | "flat" | "modern";
   buttonHistory: string;
   inputHistory: string;
+  cardHistory: string;
 };
 
-type EraElementType = "button" | "input";
+type EraElementType = "button" | "input" | "card";
 
 const eras: Era[] = [
   {
     year: "2000s",
     title: "スキューモーフィズム",
-    description: "現実の質感を取り入れたUIデザインが一般的になった時代。",
+    description:
+      "この時代は“本物そっくり”を目指したUIが主流でした。ガラスのような光沢、金属の反射、紙の質感など、現実世界の質感をデジタルに再現することで、初めてパソコンやスマホを触る人でも直感的に操作できるように工夫されていました。代表例として、Windows XPや初期のiPhone、macOS Aquaのデザインがあります。",
     theme: {
       bg: "from-sky-300 to-indigo-400",
       accent: "border-sky-100",
@@ -32,11 +34,14 @@ const eras: Era[] = [
       "2000年代のボタンは立体的な質感が特徴でした。光沢や影を付け、物理的なボタンに近い外観を再現していました。代表例はWindows XPやmacOS Aquaのボタンです。",
     inputHistory:
       "2000年代の入力欄は、凹んで見える枠やグラデーションを使い、物理的なテキストボックスを模したデザインが一般的でした。ユーザーに直感的に“ここに入力できる”と理解させる工夫がされていました。",
+    cardHistory:
+      "2000年代のカードは、分厚い影や立体感を強調したデザインでした。リアルな紙やボードのような質感を背景に使い、内容を浮き上がらせるスタイルが好まれました。",
   },
   {
     year: "2010s",
     title: "フラットデザイン",
-    description: "装飾を省き、シンプルさと可読性を重視したデザインが普及した時代。",
+    description:
+      "スマホが普及した2010年代は、画面をシンプルにして情報を見やすくすることが重視されました。立体的な装飾や影は取り除かれ、色とアイコン、文字の配置で意味を伝えるスタイルが流行しました。AppleのiOS 7やGoogleのMaterial Designが象徴的で、無駄を削ぎ落としたミニマルなUIが広がりました。",
     theme: {
       bg: "from-green-300 to-emerald-500",
       accent: "border-green-100",
@@ -46,11 +51,14 @@ const eras: Era[] = [
       "2010年代のボタンは影や光沢を取り除き、単色背景とテキストだけで表現されました。iOS 7やGoogle Material Designにより、ボタンのデザインはよりシンプルになりました。",
     inputHistory:
       "2010年代の入力欄は境界線や下線だけで示されることが多くなりました。背景は白または薄い色で、余計な装飾を省き、入力可能領域を最小限の情報で表現しました。",
+    cardHistory:
+      "2010年代のカードは、シンプルな白背景に細い境界線を引いたフラットなスタイルでした。シャドウを使わず、色や余白で情報を整理するのが特徴でした。",
   },
   {
     year: "2020s",
     title: "シンプルとダークモード",
-    description: "配色と余白を工夫し、ライトモードとダークモードを切り替えられるUIが普及した時代。",
+    description:
+      "2020年代になると、ただシンプルなだけでなく“見やすさ”や“快適さ”がより重視されるようになりました。ダークモードやライトモードの切り替えが当たり前になり、夜間でも目に優しい配色が意識されています。さらに余白や文字サイズを工夫し、装飾は最小限に抑えつつ、誰でもストレスなく使えるUIが求められるようになりました。",
     theme: {
       bg: "from-indigo-400 to-purple-600",
       accent: "border-pink-300",
@@ -60,9 +68,12 @@ const eras: Era[] = [
       "2020年代のボタンは角丸やフラットな色使いが特徴です。シャドウや装飾は最小限で、配色とサイズでボタンの重要度を示す手法が主流です。多くのアプリでライト／ダーク両方に対応する配色が採用されました。",
     inputHistory:
       "2020年代の入力欄は枠線を薄くしたり、背景と同化させるなど、目立たないデザインが多くなりました。余白やフォントサイズの調整により、入力体験の快適さと読みやすさを重視しています。",
+    cardHistory:
+      "2020年代のカードは、柔らかな角丸とドロップシャドウを使い、ライト／ダーク両対応のモダンなスタイルが定番です。背景色と余白を巧みに使って、情報を読みやすく整理しています。",
   },
 ];
 
+// EraButton
 function EraButton({ style, onClick }: { style: Era["uiStyle"]; onClick?: () => void }) {
   switch (style) {
     case "glossy":
@@ -95,13 +106,14 @@ function EraButton({ style, onClick }: { style: Era["uiStyle"]; onClick?: () => 
   }
 }
 
+// EraInput
 function EraInput({ style, onClick }: { style: Era["uiStyle"]; onClick?: () => void }) {
   switch (style) {
     case "glossy":
       return (
         <button
           onClick={onClick}
-          className="bg-gradient-to-b from-white to-gray-200 px-4 py-2 border border-gray-300 text-gray-400 w-48 rounded-sm text-sm flex w-full whitespace-nowrap tiny5"
+          className="bg-gradient-to-b from-white to-gray-200 px-4 py-2 border border-gray-300 text-gray-400 w-52 rounded-sm text-sm flex w-full whitespace-nowrap tiny5"
         >
           Search Videos...
         </button>
@@ -110,7 +122,7 @@ function EraInput({ style, onClick }: { style: Era["uiStyle"]; onClick?: () => v
       return (
         <button
           onClick={onClick}
-          className="px-4 py-2 w-48 text-sm text-gray-900 border-b-2 border-gray-400 bg-white rounded-none shadow-sm flex items-center whitespace-nowrap overflow-hidden text-ellipsis"
+          className="px-4 py-2 w-48 text-sm text-gray-400 border-b border-gray-300 bg-white rounded-t-sm shadow-sm flex items-center whitespace-nowrap overflow-hidden text-ellipsis"
         >
           Type here...
         </button>
@@ -127,6 +139,40 @@ function EraInput({ style, onClick }: { style: Era["uiStyle"]; onClick?: () => v
   }
 }
 
+// EraCard
+function EraCard({ style, onClick }: { style: Era["uiStyle"]; onClick?: () => void }) {
+  switch (style) {
+    case "glossy":
+      return (
+        <div
+          onClick={onClick}
+          className="bg-gradient-to-b from-white to-gray-200 shadow-lg border border-gray-300 px-3 py-2 w-48 cursor-pointer tiny5"
+        >
+          <p className="text-gray-700 text-sm">Glossy Card</p>
+        </div>
+      );
+    case "flat":
+      return (
+        <div
+          onClick={onClick}
+          className="bg-white rounded-sm shadow-md px-4 py-3 w-48 cursor-pointer"
+        >
+          <p className="text-gray-800 text-sm">Flat Card</p>
+        </div>
+      );
+    case "modern":
+      return (
+        <div
+          onClick={onClick}
+          className="bg-gray-800/50 text-white rounded-lg shadow-md px-4 py-3 w-48 cursor-pointer"
+        >
+          <p className="text-sm font-medium">Modern Card</p>
+        </div>
+      );
+  }
+}
+
+// EraModal
 function EraModal({
   era,
   elementType,
@@ -136,7 +182,12 @@ function EraModal({
   elementType: EraElementType;
   onClose: () => void;
 }) {
-  const historyText = elementType === "button" ? era.buttonHistory : era.inputHistory;
+  const historyText =
+    elementType === "button"
+      ? era.buttonHistory
+      : elementType === "input"
+      ? era.inputHistory
+      : era.cardHistory;
 
   // 条件付きで画像パスを決定
   let imageSrc: string | null = null;
@@ -166,12 +217,13 @@ function EraModal({
             <h3 className="text-lg font-semibold mb-4">{era.title}</h3>
             <p className="mb-6 leading-relaxed">{historyText}</p>
 
-            {/* 条件付き画像表示 */}
             {imageSrc && (
               <div className="mb-6">
                 <Image
                   src={imageSrc}
-                  alt={`${era.year} ${elementType}`} width={100} height={100}
+                  alt={`${era.year} ${elementType}`}
+                  width={100}
+                  height={100}
                   className="w-2/3 mx-auto"
                 />
               </div>
@@ -190,25 +242,35 @@ function EraModal({
   );
 }
 
-
+// Main Page
 export default function Page() {
   const [index, setIndex] = useState(0);
   const currentEra = eras[index];
 
   const [backgroundItems, setBackgroundItems] = useState<
-    { isButton: boolean; offsetY: number; scale: number; opacity: number }[]
+    { type: EraElementType; offsetY: number; scale: number; opacity: number }[]
   >([]);
 
-  const [selectedEra, setSelectedEra] = useState<{ era: Era; elementType: EraElementType } | null>(null);
+  const [selectedEra, setSelectedEra] = useState<{ era: Era; elementType: EraElementType } | null>(
+    null
+  );
 
   useEffect(() => {
     const screenHeight = window.innerHeight;
-    const items = [...Array(70)].map(() => ({
-      isButton: Math.random() > 0.5,
-      offsetY: Math.random() * screenHeight,
-      scale: 0.9 + Math.random() * 0.5,
-      opacity: 0.45,
-    }));
+    const items = [...Array(70)].map(() => {
+      const rnd = Math.random();
+      let type: EraElementType = "button";
+      if (rnd < 0.33) type = "button";
+      else if (rnd < 0.66) type = "input";
+      else type = "card";
+
+      return {
+        type,
+        offsetY: Math.random() * screenHeight,
+        scale: 0.9 + Math.random() * 0.5,
+        opacity: 0.45,
+      };
+    });
     setBackgroundItems(items);
   }, [index]);
 
@@ -232,15 +294,20 @@ export default function Page() {
               opacity: item.opacity,
             }}
           >
-            {item.isButton ? (
+            {item.type === "button" ? (
               <EraButton
                 style={currentEra.uiStyle}
                 onClick={() => setSelectedEra({ era: currentEra, elementType: "button" })}
               />
-            ) : (
+            ) : item.type === "input" ? (
               <EraInput
                 style={currentEra.uiStyle}
                 onClick={() => setSelectedEra({ era: currentEra, elementType: "input" })}
+              />
+            ) : (
+              <EraCard
+                style={currentEra.uiStyle}
+                onClick={() => setSelectedEra({ era: currentEra, elementType: "card" })}
               />
             )}
           </div>
@@ -255,13 +322,11 @@ export default function Page() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -80, scale: 0.95 }}
           transition={{ duration: 0.6 }}
-          className="z-10 flex flex-col items-center text-center max-w-xl px-6"
+          className="z-10 flex flex-col items-center text-center max-w-xl px-6 mb-8"
         >
           <h2 className="text-3xl font-semibold">{currentEra.year}</h2>
           <p className="text-2xl mt-1 zen-maru-gothic">{currentEra.title}</p>
-          <p className="text-gray-100 mt-4 zen-maru-gothic">
-            {currentEra.description}
-          </p>
+          <p className="text-gray-100 mt-4 zen-maru-gothic">{currentEra.description}</p>
         </motion.div>
       </AnimatePresence>
 

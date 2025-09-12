@@ -15,6 +15,7 @@ type Era = {
   buttonHistory: string;
   inputHistory: string;
   cardHistory: string;
+  cardFact: string;
 };
 
 type EraElementType = "button" | "input" | "card";
@@ -36,6 +37,7 @@ const eras: Era[] = [
       "2000年代の入力欄は、凹んで見える枠やグラデーションを使い、物理的なテキストボックスを模したデザインが一般的でした。ユーザーに直感的に“ここに入力できる”と理解させる工夫がされていました。",
     cardHistory:
       "2000年代のカードは、分厚い影や立体感を強調したデザインでした。リアルな紙やボードのような質感を背景に使い、内容を浮き上がらせるスタイルが好まれました。",
+    cardFact: "Windows XPのUIは“キャンディのようだ”と評されたことがあります。",
   },
   {
     year: "2010s",
@@ -53,6 +55,7 @@ const eras: Era[] = [
       "2010年代の入力欄は境界線や下線だけで示されることが多くなりました。背景は白または薄い色で、余計な装飾を省き、入力可能領域を最小限の情報で表現しました。",
     cardHistory:
       "2010年代のカードは、シンプルな白背景に細い境界線を引いたフラットなスタイルでした。シャドウを使わず、色や余白で情報を整理するのが特徴でした。",
+    cardFact: "iOS 7で突然フラット化され、“デザインが消えた”と驚く声が続出しました。",
   },
   {
     year: "2020s",
@@ -70,6 +73,7 @@ const eras: Era[] = [
       "2020年代の入力欄は枠線を薄くしたり、背景と同化させるなど、目立たないデザインが多くなりました。余白やフォントサイズの調整により、入力体験の快適さと読みやすさを重視しています。",
     cardHistory:
       "2020年代のカードは、柔らかな角丸とドロップシャドウを使い、ライト／ダーク両対応のモダンなスタイルが定番です。背景色と余白を巧みに使って、情報を読みやすく整理しています。",
+    cardFact: "ダークモードは“目に優しい”だけでなく、OLED画面だと省電力になります。",
   },
 ];
 
@@ -139,34 +143,42 @@ function EraInput({ style, onClick }: { style: Era["uiStyle"]; onClick?: () => v
   }
 }
 
-// EraCard
-function EraCard({ style, onClick }: { style: Era["uiStyle"]; onClick?: () => void }) {
+// EraCard（プチ知識つき）
+function EraCard({
+  style,
+  fact,
+  onClick,
+}: {
+  style: Era["uiStyle"];
+  fact: string;
+  onClick?: () => void;
+}) {
   switch (style) {
     case "glossy":
       return (
         <div
           onClick={onClick}
-          className="bg-gradient-to-b from-white to-gray-200 shadow-lg border border-gray-300 px-3 py-2 w-48 cursor-pointer tiny5"
+          className="bg-gradient-to-b from-white to-gray-200 shadow-lg border border-gray-300 px-3 py-2 w-52 cursor-pointer tiny5"
         >
-          <p className="text-gray-700 text-sm">Glossy Card</p>
+          <p className="text-gray-900 text-xs font-medium">{fact}</p>
         </div>
       );
     case "flat":
       return (
         <div
           onClick={onClick}
-          className="bg-white rounded-sm shadow-md px-4 py-3 w-48 cursor-pointer"
+          className="bg-white rounded-sm shadow-md px-4 py-3 w-52 cursor-pointer"
         >
-          <p className="text-gray-800 text-sm">Flat Card</p>
+          <p className="text-gray-900 text-xs font-medium">{fact}</p>
         </div>
       );
     case "modern":
       return (
         <div
           onClick={onClick}
-          className="bg-gray-800/50 text-white rounded-lg shadow-md px-4 py-3 w-48 cursor-pointer"
+          className="bg-gray-800/50 text-white rounded-lg shadow-md px-4 py-3 w-52 cursor-pointer"
         >
-          <p className="text-sm font-medium">Modern Card</p>
+          <p className="text-xs font-medium">{fact}</p>
         </div>
       );
   }
@@ -189,13 +201,12 @@ function EraModal({
       ? era.inputHistory
       : era.cardHistory;
 
-  // 条件付きで画像パスを決定
-  let imageSrc: string | null = null;
-  if (era.year === "2000s" && elementType === "button") {
-    imageSrc = "/examples/2000_button.png";
-  } else if (era.year === "2010s" && elementType === "input") {
-    imageSrc = "/examples/2010_input.png";
-  }
+  const imageSrc =
+    era.year === "2000s" && elementType === "button"
+      ? "/examples/2000_button.png"
+      : era.year === "2010s" && elementType === "input"
+      ? "/examples/2010_input.png"
+      : null;
 
   return (
     <AnimatePresence>
@@ -307,6 +318,7 @@ export default function Page() {
             ) : (
               <EraCard
                 style={currentEra.uiStyle}
+                fact={currentEra.cardFact}
                 onClick={() => setSelectedEra({ era: currentEra, elementType: "card" })}
               />
             )}

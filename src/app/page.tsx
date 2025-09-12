@@ -15,10 +15,18 @@ type Era = {
   buttonHistory: string;
   inputHistory: string;
   cardHistory: string;
-  cardFact: string;
+  cardFacts: string[];
 };
 
 type EraElementType = "button" | "input" | "card";
+
+type BackgroundItem = {
+  type: EraElementType;
+  offsetY: number;
+  scale: number;
+  opacity: number;
+  fact?: string; // カード専用
+};
 
 const eras: Era[] = [
   {
@@ -37,7 +45,11 @@ const eras: Era[] = [
       "2000年代の入力欄は、凹んで見える枠やグラデーションを使い、物理的なテキストボックスを模したデザインが一般的でした。ユーザーに直感的に“ここに入力できる”と理解させる工夫がされていました。",
     cardHistory:
       "2000年代のカードは、分厚い影や立体感を強調したデザインでした。リアルな紙やボードのような質感を背景に使い、内容を浮き上がらせるスタイルが好まれました。",
-    cardFact: "Windows XPのUIは“キャンディのようだ”と評されたことがあります。",
+    cardFacts: [
+      "Windows XPのUIは“キャンディのようだ”と評されました。",
+      "初代iPhoneはガラスと金属の質感を大切にしたUIでした。",
+      "AppleのAquaデザインは“水のようなUI”と呼ばれました。",
+    ],
   },
   {
     year: "2010s",
@@ -55,7 +67,11 @@ const eras: Era[] = [
       "2010年代の入力欄は境界線や下線だけで示されることが多くなりました。背景は白または薄い色で、余計な装飾を省き、入力可能領域を最小限の情報で表現しました。",
     cardHistory:
       "2010年代のカードは、シンプルな白背景に細い境界線を引いたフラットなスタイルでした。シャドウを使わず、色や余白で情報を整理するのが特徴でした。",
-    cardFact: "iOS 7で突然フラット化され、“デザインが消えた”と驚く声が続出しました。",
+    cardFacts: [
+      "iOS 7で突然フラット化され、“デザインが消えた”と驚く声が続出しました。",
+      "GoogleのMaterial Designは“紙とインク”をデジタルに表現したものです。",
+      "フラットデザインの流行は“情報の見やすさ”が背景にありました。",
+    ],
   },
   {
     year: "2020s",
@@ -73,7 +89,11 @@ const eras: Era[] = [
       "2020年代の入力欄は枠線を薄くしたり、背景と同化させるなど、目立たないデザインが多くなりました。余白やフォントサイズの調整により、入力体験の快適さと読みやすさを重視しています。",
     cardHistory:
       "2020年代のカードは、柔らかな角丸とドロップシャドウを使い、ライト／ダーク両対応のモダンなスタイルが定番です。背景色と余白を巧みに使って、情報を読みやすく整理しています。",
-    cardFact: "ダークモードは“目に優しい”だけでなく、OLED画面だと省電力になります。",
+    cardFacts: [
+      "ダークモードはOLED画面で省電力にもなります。",
+      "余白を活かしたUIは“ネオモルフィズム”とも呼ばれます。",
+      "2020年代は“誰でも使いやすいUI＝アクセシビリティ”が重要視されています。",
+    ],
   },
 ];
 
@@ -82,28 +102,19 @@ function EraButton({ style, onClick }: { style: Era["uiStyle"]; onClick?: () => 
   switch (style) {
     case "glossy":
       return (
-        <button
-          onClick={onClick}
-          className="css-button-shadow-border-sliding--sky cursor-pointer tiny5 px-4 py-2"
-        >
+        <button onClick={onClick} className="css-button-shadow-border-sliding--sky cursor-pointer tiny5 px-4 py-2">
           Search
         </button>
       );
     case "flat":
       return (
-        <button
-          onClick={onClick}
-          className="rounded-md px-4 py-2 text-green-600 text-sm bg-white"
-        >
+        <button onClick={onClick} className="rounded-md px-4 py-2 text-green-600 text-sm bg-white">
           Submit
         </button>
       );
     case "modern":
       return (
-        <button
-          onClick={onClick}
-          className="px-4 py-2 bg-purple-400 text-white font-semibold rounded-full"
-        >
+        <button onClick={onClick} className="px-4 py-2 bg-purple-400 text-white font-semibold rounded-full">
           Button
         </button>
       );
@@ -117,7 +128,7 @@ function EraInput({ style, onClick }: { style: Era["uiStyle"]; onClick?: () => v
       return (
         <button
           onClick={onClick}
-          className="bg-gradient-to-b from-white to-gray-200 px-4 py-2 border border-gray-300 text-gray-400 w-52 rounded-sm text-sm flex w-full whitespace-nowrap tiny5"
+          className="bg-gradient-to-b from-white to-gray-200 px-4 py-2 border border-gray-300 text-gray-400 w-52 rounded-sm text-sm flex whitespace-nowrap tiny5"
         >
           Search Videos...
         </button>
@@ -133,10 +144,7 @@ function EraInput({ style, onClick }: { style: Era["uiStyle"]; onClick?: () => v
       );
     case "modern":
       return (
-        <button
-          onClick={onClick}
-          className="px-4 py-2 rounded-md border border-white text-sm whitespace-nowrap w-32 flex"
-        >
+        <button onClick={onClick} className="px-4 py-2 rounded-md border border-white text-sm whitespace-nowrap w-32 flex">
           Enter text...
         </button>
       );
@@ -158,26 +166,20 @@ function EraCard({
       return (
         <div
           onClick={onClick}
-          className="bg-gradient-to-b from-white to-gray-200 shadow-lg border border-gray-300 px-3 py-2 w-52 cursor-pointer tiny5"
+          className="zen-maru-gothic bg-gradient-to-b from-white to-gray-200 shadow-lg border border-gray-300 px-3 py-2 w-52 cursor-pointer"
         >
           <p className="text-gray-900 text-xs font-medium">{fact}</p>
         </div>
       );
     case "flat":
       return (
-        <div
-          onClick={onClick}
-          className="bg-white rounded-sm shadow-md px-4 py-3 w-52 cursor-pointer"
-        >
+        <div onClick={onClick} className="zen-maru-gothic bg-white rounded-sm shadow-md px-4 py-3 w-52 cursor-pointer">
           <p className="text-gray-900 text-xs font-medium">{fact}</p>
         </div>
       );
     case "modern":
       return (
-        <div
-          onClick={onClick}
-          className="bg-gray-800/50 text-white rounded-lg shadow-md px-4 py-3 w-52 cursor-pointer"
-        >
+        <div onClick={onClick} className="zen-maru-gothic bg-gray-800/50 text-white rounded-lg shadow-md px-4 py-3 w-52 cursor-pointer">
           <p className="text-xs font-medium">{fact}</p>
         </div>
       );
@@ -188,10 +190,12 @@ function EraCard({
 function EraModal({
   era,
   elementType,
+  fact,
   onClose,
 }: {
   era: Era;
   elementType: EraElementType;
+  fact?: string;
   onClose: () => void;
 }) {
   const historyText =
@@ -199,7 +203,7 @@ function EraModal({
       ? era.buttonHistory
       : elementType === "input"
       ? era.inputHistory
-      : era.cardHistory;
+      : fact || era.cardHistory;
 
   const imageSrc =
     era.year === "2000s" && elementType === "button"
@@ -230,13 +234,7 @@ function EraModal({
 
             {imageSrc && (
               <div className="mb-6">
-                <Image
-                  src={imageSrc}
-                  alt={`${era.year} ${elementType}`}
-                  width={100}
-                  height={100}
-                  className="w-2/3 mx-auto"
-                />
+                <Image src={imageSrc} alt={`${era.year} ${elementType}`} width={100} height={100} className="w-2/3 mx-auto" />
               </div>
             )}
 
@@ -258,13 +256,8 @@ export default function Page() {
   const [index, setIndex] = useState(0);
   const currentEra = eras[index];
 
-  const [backgroundItems, setBackgroundItems] = useState<
-    { type: EraElementType; offsetY: number; scale: number; opacity: number }[]
-  >([]);
-
-  const [selectedEra, setSelectedEra] = useState<{ era: Era; elementType: EraElementType } | null>(
-    null
-  );
+  const [backgroundItems, setBackgroundItems] = useState<BackgroundItem[]>([]);
+  const [selectedEra, setSelectedEra] = useState<{ era: Era; elementType: EraElementType; fact?: string } | null>(null);
 
   useEffect(() => {
     const screenHeight = window.innerHeight;
@@ -280,10 +273,11 @@ export default function Page() {
         offsetY: Math.random() * screenHeight,
         scale: 0.9 + Math.random() * 0.5,
         opacity: 0.45,
+        fact: type === "card" ? currentEra.cardFacts[Math.floor(Math.random() * currentEra.cardFacts.length)] : undefined,
       };
     });
     setBackgroundItems(items);
-  }, [index]);
+  }, [index, currentEra]);
 
   return (
     <main
@@ -306,20 +300,14 @@ export default function Page() {
             }}
           >
             {item.type === "button" ? (
-              <EraButton
-                style={currentEra.uiStyle}
-                onClick={() => setSelectedEra({ era: currentEra, elementType: "button" })}
-              />
+              <EraButton style={currentEra.uiStyle} onClick={() => setSelectedEra({ era: currentEra, elementType: "button" })} />
             ) : item.type === "input" ? (
-              <EraInput
-                style={currentEra.uiStyle}
-                onClick={() => setSelectedEra({ era: currentEra, elementType: "input" })}
-              />
+              <EraInput style={currentEra.uiStyle} onClick={() => setSelectedEra({ era: currentEra, elementType: "input" })} />
             ) : (
               <EraCard
                 style={currentEra.uiStyle}
-                fact={currentEra.cardFact}
-                onClick={() => setSelectedEra({ era: currentEra, elementType: "card" })}
+                fact={item.fact!}
+                onClick={() => setSelectedEra({ era: currentEra, elementType: "card", fact: item.fact })}
               />
             )}
           </div>
@@ -364,11 +352,7 @@ export default function Page() {
 
       {/* モーダル */}
       {selectedEra && (
-        <EraModal
-          era={selectedEra.era}
-          elementType={selectedEra.elementType}
-          onClose={() => setSelectedEra(null)}
-        />
+        <EraModal era={selectedEra.era} elementType={selectedEra.elementType} fact={selectedEra.fact} onClose={() => setSelectedEra(null)} />
       )}
     </main>
   );
